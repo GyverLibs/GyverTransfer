@@ -1,0 +1,47 @@
+#######################################
+# Syntax Coloring Map For GyverTransfer
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+GyverTransfer	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+write	KEYWORD2
+writeData	KEYWORD2
+writeDataCRC	KEYWORD2
+
+tick	KEYWORD2
+tickISR	KEYWORD2
+available	KEYWORD2
+read	KEYWORD2
+readData	KEYWORD2
+gotData	KEYWORD2
+readDataCRC	KEYWORD2
+peek	KEYWORD2
+clearBuffer	KEYWORD2
+buffer	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+GT_TX	LITERAL1
+GT_RX	LITERAL1
+GT_TRX	LITERAL1
+GT_38KHZ	LITERAL1
+GT_433MHZ	LITERAL1
+
+GT_HIGH_OUT	LITERAL1
+GT_FLOW_CONTROL	LITERAL1
+GT_OFFSET	LITERAL1
+GT_CLI	LITERAL1
+GT_STREAM_MODE	LITERAL1
+GT_PRINT_MODE	LITERAL1
+GT_MICRO_TX	LITERAL1
+GT_TRAINING	LITERAL1
