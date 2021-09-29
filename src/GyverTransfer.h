@@ -21,6 +21,7 @@
 
     Версии:
     v1.0
+    v1.1 - LOW на линии для 433mhz/38khz режимов
 */
 
 #ifndef _GyverTransfer_h
@@ -158,14 +159,16 @@ public:
 #endif
     write(const uint8_t *buffer, size_t size) {
         if (GT_ROLE == GT_433MHZ) {       
-            bool flag = 0;
+            bool flag = 1;
             int pulses = (GT_TRAINING / (2 * GT_START(GT_SPEED))) | 1;
             for (uint16_t i = 0; i < pulses; i++) {
-                fastWrite(GT_PIN, flag = !flag);
+                fastWrite(GT_PIN, flag);
+                flag = !flag;
                 GT_DELAY(2 * GT_START(GT_SPEED));
             }
         }
         for (uint16_t i = 0; i < size; i++) write(buffer[i]);
+        
         return 0;
     }
 
@@ -175,6 +178,7 @@ public:
     void writeData(T &data) {
         uint8_t *ptr = (uint8_t*) &data;
         write(ptr, sizeof(T));
+        if (GT_ROLE == GT_433MHZ) setPin(0);
     }
     
     // отправка любого типа данных + CRC
@@ -186,6 +190,7 @@ public:
         write(ptr, sizeof(T));
         write(crc);
         write(~crc);
+        if (GT_ROLE == GT_433MHZ) setPin(0);
     }    
     
     // ================================== TICK ==================================
@@ -201,7 +206,6 @@ public:
     
     // тикер приёма для вызова в прерывании по CHANGE. Вернёт true если принят байт
     bool tickISR() {
-        
         if (GT_ROLE == GT_TRX && transmitting) return 0;            // отключаем приём, если трансивер передаёт
         uint32_t pulse = micros() - tmr;                            // считаем время импульса
         tmr += pulse;                                               // сброс таймера. Равносильно tmr = micros()
@@ -340,7 +344,7 @@ private:
     }
     
     void pulse38kHz(int dur) {
-        dur = (dur / 13) | 1;   // кол-во пакетов по 13мкс + округляем до кратности двойки
+        dur = (dur / 13) & ~1;   // кол-во пакетов по 13мкс + округляем до нечётного
         bool flag = 1;
         for (int i = 0; i < dur; i++) {
             fastWrite(GT_PIN, flag);
