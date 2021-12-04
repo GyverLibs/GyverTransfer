@@ -22,6 +22,7 @@
     Версии:
     v1.0
     v1.1 - LOW на линии для 433mhz/38khz режимов
+    v1.2 - мелкие фиксы
 */
 
 #ifndef _GyverTransfer_h
@@ -147,7 +148,7 @@ public:
         interrupts();
         #endif 
         #endif
-        return 0;
+        return;
     }
 
     // =============================== WRITE BYTES ===============================
@@ -169,7 +170,7 @@ public:
         }
         for (uint16_t i = 0; i < size; i++) write(buffer[i]);
         
-        return 0;
+        return;
     }
 
     // =============================== WRITE DATA ===============================
