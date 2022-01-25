@@ -23,6 +23,7 @@
     v1.0
     v1.1 - LOW на линии для 433mhz/38khz режимов
     v1.2 - мелкие фиксы
+    v1.3 - исправлена критическая ошибка
 */
 
 #ifndef _GyverTransfer_h
@@ -300,11 +301,12 @@ public:
 
         uint8_t *ptr = (uint8_t*) &data;
         crc = 0;
-        for (uint16_t i = 0; i < sizeof(T) + 1; i++) {
+        for (uint16_t i = 0; i < sizeof(T); i++) {
             *ptr = buffer[(tail + i) % GT_RXBUF];
             crc8_byte(crc, *ptr);
             *ptr++;
         }
+        crc8_byte(crc, *ptr);
         if (crc) return false;                                      // не совпал crc
         clearBuffer();
         return true;                                                // всё ок
