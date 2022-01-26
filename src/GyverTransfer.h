@@ -149,7 +149,7 @@ public:
         interrupts();
         #endif 
         #endif
-        return;
+        return 1;
     }
 
     // =============================== WRITE BYTES ===============================
@@ -171,7 +171,7 @@ public:
         }
         for (uint16_t i = 0; i < size; i++) write(buffer[i]);
         
-        return;
+        return 1;
     }
 
     // =============================== WRITE DATA ===============================
@@ -211,10 +211,10 @@ public:
         if (GT_ROLE == GT_TRX && transmitting) return 0;            // отключаем приём, если трансивер передаёт
         uint32_t pulse = micros() - tmr;                            // считаем время импульса
         tmr += pulse;                                               // сброс таймера. Равносильно tmr = micros()
-        if (pulse <= GT_EDGE_L(GT_SPEED)) return parse = 0;         // импульс слишком короткий
+        if (pulse <= GT_EDGE_L(GT_SPEED)) return (parse = 0);       // импульс слишком короткий
         else if (pulse <= GT_EDGE_HS(GT_SPEED) && parse) {          // окно данных
         #ifdef GT_FLOW_CONTROL
-            if (fastRead(GT_PIN) != (bits & 1)) return parse = 0;   // не наш фронт, выходим
+            if (fastRead(GT_PIN) != (bits & 1)) return (parse = 0); // не наш фронт, выходим
         #endif
             byteBuf >>= 1;                                          // двигаем байт
             if (pulse > GT_EDGE_LH(GT_SPEED)) byteBuf |= (1 << 7);  // пишем бит
@@ -238,7 +238,7 @@ public:
             parse = bits = 0;                                       // прерываем парсинг, если он был
             if (fastRead(GT_PIN)) parse = 1;                        // старт бит, начинаем парсинг
             return 0;
-        } else return parse = 0;                                    // слишком длинный импульс, выходим
+        } else return (parse = 0);                                  // слишком длинный импульс, выходим
         return 0;
     }
 
@@ -300,14 +300,12 @@ public:
         if (crc & icrc) return false;                               // ошибка передачи crc
 
         uint8_t *ptr = (uint8_t*) &data;
-        crc = 0;
+        icrc = 0;
         for (uint16_t i = 0; i < sizeof(T); i++) {
             *ptr = buffer[(tail + i) % GT_RXBUF];
-            crc8_byte(crc, *ptr);
-            *ptr++;
+            crc8_byte(icrc, *ptr++);
         }
-        crc8_byte(crc, *ptr);
-        if (crc) return false;                                      // не совпал crc
+        if (crc != icrc) return false;                              // не совпал последний байт crc
         clearBuffer();
         return true;                                                // всё ок
     }
