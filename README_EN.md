@@ -1,3 +1,5 @@
+This is an automatic translation, may be incorrect in some places. See sources and examples!
+
 # GyverTransfer
 Library for data transfer via the GyverTransfer (GT) interface
 - GT - Reliable single-wire, self-timed pulse-length based communication interface
