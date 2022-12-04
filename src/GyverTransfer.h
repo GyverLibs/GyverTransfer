@@ -24,6 +24,7 @@
     v1.1 - LOW на линии для 433mhz/38khz режимов
     v1.2 - мелкие фиксы
     v1.3 - исправлена критическая ошибка
+    v1.3.1 - fix compiler warnings
 */
 
 #ifndef _GyverTransfer_h
@@ -149,7 +150,10 @@ public:
         interrupts();
         #endif 
         #endif
+
+#if defined(GT_STREAM_MODE) || defined(GT_PRINT_MODE)
         return 1;
+#endif
     }
 
     // =============================== WRITE BYTES ===============================
@@ -170,8 +174,9 @@ public:
             }
         }
         for (uint16_t i = 0; i < size; i++) write(buffer[i]);
-        
+#if defined(GT_STREAM_MODE) || defined(GT_PRINT_MODE)
         return 1;
+#endif
     }
 
     // =============================== WRITE DATA ===============================
