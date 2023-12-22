@@ -1,225 +1,243 @@
 This is an automatic translation, may be incorrect in some places. See sources and examples!
 
-# GyverTransfer
-Library for data transfer via the GyverTransfer (GT) interface
-- GT - Reliable single-wire, self-timed pulse-length based communication interface
-- Asynchronous receive in CHANGE interrupt
-- Speed ​​up to 45'000 baud (over the wire)
-- Customizable inheritance of Print and Stream classes
-- Customizable receive buffer
-- Send without buffer, blocking
-- Operating mode of the transmitter, receiver and transceiver
-- Supports 38 kHz IR transmission
-- Support 433MHz radio transmission
-- The library does not take any interruptions, everything is manual
+# Gyvertransfer
+Library for transmitting data on the GyverTransfer interface (GT)
+- GT is a reliable one -wire self -synchronizing communication interface based on the length of the pulse
+- asynchronous reception in interruption by Change
+- speed up to 45'000 body (by wire)
+- customizer inheritance of Print and Stream classes
+- Completed buffer for reception
+- Sending without a buffer, blocking
+- operating mode of the transmitter, receiver and transceiver
+- Support for transmission by IR channel 38 kHz
+- Support for gear on radio 433 MHz
+- The library does not take any interruptions, everything manually
 - A light weight
+! [GT] (/doc/interface.png)
 
-### Compatibility
-Compatible with all Arduino platforms (using Arduino functions)
-- When connecting an interrupt on esp8266, do not forget the `IRAM_ATTR` attribute
+## compatibility
+Compatible with all arduino platforms (used arduino functions)
+- When connecting an interruption on the ESP8266, do not forget the Attricbut `IRAM_ATTR`
 
 ## Content
-- [Install](#install)
-- [Initialization](#init)
-- [Usage](#usage)
-- [Example](#example)
-- [Versions](#versions)
-- [Bugs and feedback](#feedback)
+- [installation] (# Install)
+- [initialization] (#init)
+- [use] (#usage)
+- [Example] (# Example)
+- [versions] (#varsions)
+- [bugs and feedback] (#fedback)
 
-<a id="install"></a>
+<a id="install"> </a>
 ## Installation
-- The library can be found by the name **GyverTransfer** and installed through the library manager in:
-    - Arduino IDE
-    - Arduino IDE v2
-    - PlatformIO
-- [Download library](https://github.com/GyverLibs/GyverTransfer/archive/refs/heads/main.zip) .zip archive for manual installation:
-    - Unzip and put in *C:\Program Files (x86)\Arduino\libraries* (Windows x64)
-    - Unzip and put in *C:\Program Files\Arduino\libraries* (Windows x32)
-    - Raspaforge and put in *Documents/Arduino/libraries/*
-    - (Arduino IDE) automatic installation from .zip: *Sketch/Include library/Add .ZIP library…* and specify the downloaded archive
-- Read more detailed instructions for installing libraries [here] (https://alexgyver.ru/arduino-first/#%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE% D0%B2%D0%BA%D0%B0_%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA)
+- The library can be found by the name ** gyvertransfer ** and installed through the library manager in:
+    - Arduino ide
+    - Arduino ide v2
+    - Platformio
+- [download the library] (https://github.com/gyverlibs/gyvertransfer/archive/refs/heads/main.zip). Zip archive for manual installation:
+    - unpack and put in * C: \ Program Files (X86) \ Arduino \ Libraries * (Windows X64)
+    - unpack and put in * C: \ Program Files \ Arduino \ Libraries * (Windows X32)
+    - unpack and put in *documents/arduino/libraries/ *
+    - (Arduino id) Automatic installation from. Zip: * sketch/connect the library/add .Zip library ... * and specify downloaded archive
+- Read more detailed instructions for installing libraries [here] (https://alexgyver.ru/arduino-first/#%D0%A3%D1%81%D1%82%D0%B0%BD%D0%BE%BE%BE%BED0%B2%D0%BA%D0%B0_%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA)
 
-<a id="init"></a>
-## Initialization
-```cpp
-GyverTransfer<pin, role> transfer;
-GyverTransfer<pin, role, speed> transfer;
-GyverTransfer<pin, role, speed, buffer> transfer;
-```
-- **Pin**: any digital pin. Preferably with a convenient interrupt connection for asynchronous reception
-- **Role**:
-    - *GT_TX*: transmitter, for wired operation
-    - *GT_RX*: receiver, for wired operation
-    - *GT_TRX*: transceiver (transceiver), for wired operation
-    - *GT_38KHZ*: 38 kHz modulation to send via IR transmitter. Max. speed: 2000 baud
-    - *GT_433MHZ*: Adds a set of sync pulses before being sent on the 433MHz radio. Max. speed: 3000 baud
-- **Speed**: Speed: 0-45000 baud. By default 5000
-- **Buffer**: receiver buffer size (GT_RX/GT_TRX). By default 0
-    - Note: The code will run faster if the buffer size is a power of 2
+### Update
+- I recommend always updating the library: errors and bugs are corrected in the new versions, as well as optimization and new features are added
+- through the IDE library manager: find the library how to install and click "update"
+- Manually: ** remove the folder with the old version **, and then put a new one in its place.“Replacement” cannot be done: sometimes in new versions, files that remain when replacing are deleted and can lead to errors!
 
-<a id="usage"></a>
-## Usage
-```cpp
-// SEND
-void write(uint8_t data); // send data byte
-void writeData(T&data); // send data of any type and size
-void writeDataCRC(T&data); // send data of any type and size + CRC
-// with GT_PRINT_MODE enabled, sends print() any data type and write() arrays of bytes
 
-// RECEPTION
-bool tick(); // receive ticker to call in loop() (not recommended). Returns true if a byte is received
-bool tickISR(); // receive ticker to call in CHANGE interrupt. Returns true if a byte is received
-int available(); // will return the number of bytes in the receive buffer
-bool gotData(); // received data (by timeout)
-intread(); //read from the receive buffer (-1 if there is nothing to read)
-bool readData(T&data); // read buffer into any data type. true if successfully read
-bool readDataCRC(T&data); // read buffer into any data type + CRC. true if successfully read
-int peek(); // read from the receive buffer without deleting from the buffer
-void clearBuffer(); // clear the receive buffer
-uint8_tbuffer[]; // access to FIFO receive buffer
+<a id="init"> </a>
+## initialization
+`` `CPP
+Gyvertransfer <Pin, Role> Transfer;
+Gyvertransfer <Pin, Role, Speed> Transfer;
+Gyvertransfer <PIN, Role, Speed, Boofer> Transfer;
+`` `
+- ** PIN **: Any digital pin.Preferably with a convenient interruption connection for asynchronous intake
+- ** Role **:
+    - *gt_tx *: transmitter, for work on the wire
+    - *gt_rx *: receiver, for work on the wire
+    - *gt_trx *: receiver (transceiver), for work on the wire
+    - *gt_38khz *: modulation of 38 kHz for sending through IR transmitter.Max.Speed: 2000 Bod
+    - *GT_433MHz *: adds a set of synchroimpuls before sending 433 MHz before the radio.Max.Speed: 3000 BOD
+- ** speed **: speed: 0-45000 baud.By the silence.5000
+- ** buffer **: the size of the receiver buffer (gt_rx/gt_trx).By the silence.0
+    - Note: the code will work faster with the size of the buffer, a multiple of 2
 
-// DEFINE SETTINGS (specify before connecting the library)
-#define GT_STREAM_MODE // [GT_RX] inherit Print.h and Stream.h (receiving parseInt, readBytes and others)
-#define GT_FLOW_CONTROL // [GT_RX] check the parity of the receive. Reduces max. receive speed (up to ~30'000 baud)
-#define GT_PRINT_MODE // [GT_TX] extend Print.h (send print any data)
-#define GT_MICRO_TX // [GT_TX] cut receiver code to save space
-#define GT_CLI // [GT_TX] disable interrupts while sending (improves communication at high speeds when code is loaded)
-#define GT_OFFSET (number) // [GT_TX] transmitter delay correction, µs (default 5)
-#define GT_TRAINING (number) // [GT_TX] sync duration for GT_433MHZ role in µs, default 100000
-#define GT_HIGH_OUT // [GT_TX] HIGH pulse will be in OUTPUT mode instead of INPUT_PULLUP
-```
+<a id="usage"> </a>
+## POlse
+`` `CPP
+// Sending
+VOID Write (Uint8_T DATA);// Send byte data
+VOID Writededata (T & Data);// Send data any type and size
+VOID Writededacrc (T & Data);// Send data of any type and size + CRC
+// when GT_PRINT_MODE is on, it sends print () any type of data and WRITE () bytes of the byte
 
-<a id="example"></a>
+// Reception
+Bool Tick ();// Take of reception for calling in LOOP () (not recommended).Will return True if byte is accepted
+Bool Tickisr ();// Take of reception for calling in interruption in Change.Will return True if byte is accepted
+int Available ();// will return the number of bytes in the reception buffer
+Bool Gotdata ();// received data (by timeout)
+int Read ();// read from a buffer of the reception (-1 if there is nothing to read)
+Bool Readdata (T & Data);// Read the buffer in any type of data.True if you read it successfully
+Bool Readdatacrc (T & Data);// Read the buffer in any type of data + CRC.True if you read it successfully
+int peek ();// Read from the reception buffer without removal from the buffer
+Void Clearbuffer ();// Clean the reception buffer
+uint8_t buffer [];// access to fifo reception buffer
+
+// defines of settings (indicate before connecting the library)
+#define gt_stream_mode // [gt_rx] inherit Print.h and Stream.h (Reception Parseint, Readbytes and others)
+#define gt_flow_control // [gt_rx] Check the time of reception.Reduces max.Reception speed (up to ~ 30'000 BOD)
+#define gt_print_mode // [gt_tx] inherit print.h (sending Print of any data)
+#define gt_micro_tx // [gt_tx] cuts out a receiver code to save space
+#define gt_cli // [gt_tx] Prohibition of interruptions for the duration of sending (improving communication at high speeds at a loaded code)
+#define gt_offset (number) // [gt_tx] Correction of delay for the transmitter, ISS (by default. 5)
+#define gt_training (number) // [gt_tx] The duration of synchroimpuls for the role of GT_433MHz in the ISS, by the silence.100000
+#define gt_high_out // [gt_tx] High impulse will be in Output mode instead of input_pullup
+`` `
+
+<a id="EXAMPLE"> </a>
 ## Examples
-See **examples** for other examples!
-### Send via Print
-```cpp
-#define GT_PRINT_MODE // to send via print
-#define GT_MICRO_TX // cut receiver code (weight optimization)
+The rest of the examples look at ** Examples **!
+### Sending through Print
+`` `CPP
+#define gt_print_mode // for sending through Print
+#define gt_micro_tx // Cut the receiver code (weight optimization)
 
-#include <GyverTransfer.h>
-GyverTransfer<2, GT_TX, 5000> tx;
+#include <gyvertransfer.h>
+Gyvertransfer <2, gt_tx, 5000> tx;
 
-void setup() {
+VOID setup () {
 }
 
-void loop() {
-  tx.println("Hello world 123 test");
-  delay(1000);
+VOID loop () {
+  tx.println ("Hello World 123 Test");
+  DELAY (1000);
 }
-```
+`` `
 
-### Receiving via Stream
-```cpp
-#define GT_STREAM_MODE // for readString and others to work
+### Reception through Stream
+`` `CPP
+#define gt_stream_mode // for the work of Readstring and others
 
-#include <GyverTransfer.h>
-GyverTransfer<2, GT_RX, 5000, 20> rx;
+#include <gyvertransfer.h>
+Gyvertransfer <2, gt_rx, 5000, 20> rx;
 
-void setup() {
-  Serial.begin(9600);
-  attachInterrupt(0, isr, CHANGE);
-  rx.setTimeout(100);
-}
-
-void isr() {
-  // spec. tickp is called in interrupt
-  rx.tickISR();
+VOID setup () {
+  Serial.Begin (9600);
+  Attachinterrupt (0, Isr, Change);
+  rx.settimeout (100);
 }
 
-void loop() {
-  if (rx.available()) {
-    Serial.print(rx.readString());
+VOID isr () {
+  // Special.The ticer is called in interruption
+  rx.tickisr ();
+}
+
+VOID loop () {
+  if (rx.available ()) {
+    Serial.print (rx.readstring ());
   }
 }
-```
+`` `
 
-### Send manually + CRC
-```cpp
-// send any type of data using the library
-// for example - structure. The receiver knows about it
-struct Data {
-  byte valB;
-  uint32_tvalU;
-  float value;
+### Sending manually + CRC
+`` `CPP
+// Send any type of data from the library
+// for example - structure.The receiver knows about this
+Struct Data {
+  byte valb;
+  uint32_t valu;
+  Float VALF;
 };
 
-#define GT_MICRO_TX // cut receiver code (weight reduction)
+#define gt_micro_tx // Cut the receiver code (weight loss)
 
-#include <GyverTransfer.h>
-GyverTransfer<2, GT_TX, 5000> tx;
+#include <gyvertransfer.h>
+Gyvertransfer <2, gt_tx, 5000> tx;
 
-void setup() {
+VOID setup () {
 }
 
-void loop() {
-  // we will transfer the counter, millis and pi
-  static byte count;
-  count++;
-  Data data = (Data) {
-    count, millis(), 3.14
+VOID loop () {
+  // we will transmit the counter, millis and pi
+  Static Byte Count;
+  Count ++;
+  Data Data = (Data) {
+    Count, Millis (), 3.14
   };
   
-  // send with CRC to be safe
-  tx.writeDataCRC(data);
-  delay(1000);
+  // Send from CRC for reliability
+  TX.Writededacrc (Data);
+  DELAY (1000);
 }
-```
+`` `
 
-### Receive manually + CRC
-```cpp
-// read any data type using the library
+### Making manually + CRC
+`` `CPP
+// Read any type of data by library
 // for example - structure
-struct Data {
-  byte valB;
-  uint32_tvalU;
-  float value;
+Struct Data {
+  byte valb;
+  uint32_t valu;
+  Float VALF;
 };
 
-#include <GyverTransfer.h>
-GyverTransfer<2, GT_RX, 5000, 20> rx;
+#include <gyvertransfer.h>
+Gyvertransfer <2, gt_rx, 5000, 20> rx;
 
-void setup() {
-  Serial.begin(9600);
-  attachInterrupt(0, isr, CHANGE);
+VOID setup () {
+  Serial.Begin (9600);
+  Attachinterrupt (0, Isr, Change);
 }
 
-void isr() {
-  // spec. ticker is called in interrupt
-  rx.tickISR();
+VOID isr () {
+  // Special.The ticer is called in interruption
+  rx.tickisr ();
 }
 
-void loop() {
-  // if some data is received (built-in timeout)
-  if (rx.gotData()) {
-    data data;
+VOID loop () {
+  // if any data is accepted (built -in timaut)
+  if (rx.gotdata ()) {
+    Data Data;
 
-    // read data if it is
-    // accepted correctly and fit the size
-    if (rx.readDataCRC(data)) {
-      Serial.println(data.valB);
-      Serial.println(data.valU);
-      Serial.println(data.valF);
-      Serial.println();
+    // Read the data if they
+    // accepted correctly and correspond to the size
+    if (rx.reAddatacrc (Data)) {
+      Serial.println (Data.valb);
+      Serial.println (Data.valu);
+      Serial.println (Data.valf);
+      Serial.println ();
     } else {
-      // otherwise the data is corrupted or the wrong length!
+      // Otherwise, the data is damaged or the wrong length!
       
-      // disassemble if necessary
+      // ourselves analyze if necessary
       // .................
     }
-    rx.clearBuffer(); // be sure to manually clear the buffer
+    rx.clearbuffer ();// be sure to manually clean the buffer
   }
 }
-```
+`` `
 
-<a id="versions"></a>
-## Versions
-- v1.0
-- v1.1 - LOW on line for 433mhz/38khz modes
-- v1.2 - minor fixes
-- v1.3 - fixed critical bug
+<a id="versions"> </a>
+## versions
+- V1.0
+- V1.1 - Low on the line for 433MHZ/38KHZ modes
+- V1.2 - Small fixes
+- V1.3 - Critical error is fixed
+- v1.3.1 - Fix Compiler Warnings
 
-<a id="feedback"></a>
-## Bugs and feedback
-When you find bugs, create an **Issue**, or better, immediately write to the mail [alex@alexgyver.ru](mailto:alex@alexgyver.ru)
-The library is open for revision and your**Pull Request**'s!
+<a id="feedback"> </a>
+## bugs and feedback
+Create ** Issue ** when you find the bugs, and better immediately write to the mail [alex@alexgyver.ru] (mailto: alex@alexgyver.ru)
+The library is open for refinement and your ** pull Request ** 'ow!
+
+
+When reporting about bugs or incorrect work of the library, it is necessary to indicate:
+- The version of the library
+- What is MK used
+- SDK version (for ESP)
+- version of Arduino ide
+- whether the built -in examples work correctly, in which the functions and designs are used, leading to a bug in your code
+- what code has been loaded, what work was expected from it and how it works in reality
+- Ideally, attach the minimum code in which the bug is observed.Not a canvas of a thousand lines, but a minimum code
