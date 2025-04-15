@@ -6,6 +6,9 @@
 
 [![Foo](https://img.shields.io/badge/ПОДПИСАТЬСЯ-НА%20ОБНОВЛЕНИЯ-brightgreen.svg?style=social&logo=telegram&color=blue)](https://t.me/GyverLibs)
 
+> [!NOTICE]
+> **Появилась более лёгкая и удобная библиотека [GyverWire](https://github.com/GyverLibs/GyverWire)**
+
 # GyverTransfer
 Библиотека для передачи данных по интерфейсу GyverTransfer (GT)
 - GT - надёжный однопроводной самосинхронизирующийся интерфейс связи, основанный на длине импульса
